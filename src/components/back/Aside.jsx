@@ -46,11 +46,11 @@ function Aside({ setActiveComponent, activeComponent }) {
                 <li className="nav-item">
                   <a
                     type='button'
-                    className={`nav-link ${activeComponent === "Statistiques" ? "active" : ""}`}
-                    onClick={() => setActiveComponent("Statistiques")}
+                    className={`nav-link ${activeComponent === "Services" ? "active" : ""}`}
+                    onClick={() => setActiveComponent("Services")}
                   >
                     <i className="far fa-circle nav-icon"></i>
-                    <p>Statistiques</p>
+                    <p>Services</p>
                   </a>
                 </li>
                 <li className="nav-item">
@@ -66,51 +66,51 @@ function Aside({ setActiveComponent, activeComponent }) {
                 <li className="nav-item">
                   <a
                     type='button'
-                    className={`nav-link ${activeComponent === "Articles" ? "active" : ""}`}
-                    onClick={() => setActiveComponent("Articles")}
+                    className={`nav-link ${activeComponent === "Materiels" ? "active" : ""}`}
+                    onClick={() => setActiveComponent("Materiels")}
                   >
                     <i className="far fa-circle nav-icon"></i>
-                    <p>Articles</p>
+                    <p>Materiels</p>
                   </a>
                 </li>
                 <li className="nav-item">
                   <a
                     type='button'
-                    className={`nav-link ${activeComponent === "Equipes" ? "active" : ""}`}
-                    onClick={() => setActiveComponent("Equipes")}
+                    className={`nav-link ${activeComponent === "Categories" ? "active" : ""}`}
+                    onClick={() => setActiveComponent("Categories")}
                   >
                     <i className="far fa-circle nav-icon"></i>
-                    <p>Equipes</p>
+                    <p>Categories</p>
                   </a>
                 </li>
                 <li className="nav-item">
                   <a
                     type='button'
-                    className={`nav-link ${activeComponent === "Laboratoires" ? "active" : ""}`}
-                    onClick={() => setActiveComponent("Laboratoires")}
+                    className={`nav-link ${activeComponent === "Affmateriels" ? "active" : ""}`}
+                    onClick={() => setActiveComponent("Affmateriels")}
                   >
                     <i className="far fa-circle nav-icon"></i>
-                    <p>Laboratoires</p>
+                    <p>Affectation materiels</p>
                   </a>
                 </li>
                 <li className="nav-item">
                   <a
                     type='button'
-                    className={`nav-link ${activeComponent === "Doctorants" ? "active" : ""}`}
-                    onClick={() => setActiveComponent("Doctorants")}
+                    className={`nav-link ${activeComponent === "Boncommande" ? "active" : ""}`}
+                    onClick={() => setActiveComponent("Boncommande")}
                   >
                     <i className="far fa-circle nav-icon"></i>
-                    <p>Doctorants</p>
+                    <p>Bon de commande</p>
                   </a>
                 </li>
                 <li className="nav-item">
                   <a
                     type='button'
-                    className={`nav-link ${activeComponent === "Livres" ? "active" : ""}`}
-                    onClick={() => setActiveComponent("Livres")}
+                    className={`nav-link ${activeComponent === "Categoriebdc" ? "active" : ""}`}
+                    onClick={() => setActiveComponent("Categoriebdc")}
                   >
                     <i className="far fa-circle nav-icon"></i>
-                    <p>Livres</p>
+                    <p>Categorie BDC</p>
                   </a>
                 </li>
               </ul>

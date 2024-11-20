@@ -12,53 +12,16 @@ const PublicRoute = () => {
 
   switch (role) {
     case 0:
-      return <Navigate to="/" />;
+      return <Navigate to="/admin" />;
     case 1:
       return <Navigate to="/chef-equipe" />;
     case 2:
       return <Navigate to="/chef-labo" />;
     case 3:
-      return <Navigate to="/admin" />;
+      return <Navigate to="/test" />;
     default:
       return <Navigate to="/login" />;
   }
 };
 
 export default PublicRoute;
-/*import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
-
-const PublicRoute = () => {
-  const isAuthenticated = !!localStorage.getItem("accessToken");
-  const role = parseInt(localStorage.getItem("role"), 10);
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
-
-  switch (role) {
-    case 0:
-      return <Navigate to="/" />;
-    case 1:
-      return <Navigate to="/chef-equipe" />;
-    case 2:
-      return <Navigate to="/chef-labo" />;
-    case 3:
-      return <Navigate to="/admin" />;
-    default:
-      return <Navigate to="/login" />;
-  }
-};
-
-export default PublicRoute;*/
-
-/*import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
-
-const PublicRoute = () => {
-  const isAuthenticated = !!localStorage.getItem("accessToken");
-  const role = parseInt(localStorage.getItem("role"), 10);
-  return isAuthenticated ? <Navigate to="/" /> : <Outlet />;
-};
-
-export default PublicRoute;*/

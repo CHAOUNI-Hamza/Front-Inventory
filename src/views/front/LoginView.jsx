@@ -56,15 +56,12 @@ export default function HomeView() {
         // Redirection en fonction du rôle
       switch (role) {
         case 0:
-          window.location.href = '/';
+          window.location.href = '/admin';
           break;
         case 1:
-          window.location.href = '/chef-equipe';
+          window.location.href = '/admin';
           break;
         case 2:
-          window.location.href = '/chef-labo';
-          break;
-        case 3:
           window.location.href = '/admin';
           break;
         default:
@@ -136,7 +133,7 @@ export default function HomeView() {
                   <div className="form-group d-md-flex">
                     <div className="text-left">
                       <label className="checkbox-primary mb-0 fw-bold">
-                        Plateforme MAQALAT - FLSHM Mohammedia
+                        Plateforme INVENTAIRES - FLSHM Mohammedia
                       </label>
                     </div>
                   </div>

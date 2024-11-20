@@ -10,15 +10,3 @@ const PrivateRouteAdmin = () => {
 };
 
 export default PrivateRouteAdmin;
-
-/*import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
-
-const PrivateRouteAdmin = () => {
-  const isAuthenticated = !!localStorage.getItem("accessToken");
-  const role = parseInt(localStorage.getItem("role"), 10);
-
-  return isAuthenticated && role === 0 ? <Outlet /> : <Navigate to="/login" />;
-};
-
-export default PrivateRouteAdmin;*/

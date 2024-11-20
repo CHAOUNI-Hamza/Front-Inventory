@@ -2,31 +2,31 @@ import { useState } from "react";
 import Nav from "../../components/back/Nav";
 import Footer from "../../components/back/Footer";
 import Aside from "../../components/back/Aside";
-import Articles from "../../components/back/Articles";
-import Equipes from "../../components/back/Equipes";
-import Laboratoires from "../../components/back/Laboratoires";
-import Livres from "../../components/back/Livres";
-import Doctorants from "../../components/back/Doctorants";
+import Services from "../../components/back/Services";
+import Categories from "../../components/back/Categories";
+import Boncommande from "../../components/back/Boncommande";
+import Categoriebdc from "../../components/back/Categoriebdc";
+import Affmateriels from "../../components/back/Affmateriels";
 import Users from "../../components/back/Users";
-import Statistiques from "../../components/back/Statistiques";
+import Materiels from "../../components/back/Materiels";
 
 function Dashboard({ handleLogout }) {
     const [activeComponent, setActiveComponent] = useState("Statistiques");
 
     const renderComponent = () => {
         switch (activeComponent) {
-            case "Articles":
-                return <Articles />;
-            case "Statistiques":
-                return <Statistiques />;
-            case "Equipes":
-                return <Equipes />;
-            case "Doctorants":
-                return <Doctorants />;
-            case "Laboratoires":
-                return <Laboratoires />;
-            case "Livres":
-                return <Livres />;
+            case "Services":
+                return <Services />;
+            case "Materiels":
+                return <Materiels />;
+            case "Categories":
+                return <Categories />;
+            case "Affmateriels":
+                return <Affmateriels />;
+            case "Boncommande":
+                return <Boncommande />;
+            case "Categoriebdc":
+                return <Categoriebdc />;
             case "Users":
             default:
                 return <Users />;
