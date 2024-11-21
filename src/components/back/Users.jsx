@@ -113,6 +113,14 @@ function Users() {
   const editUser = async () => {
     try {
       const { id, first_name, last_name, email, password, role, confirmPassword, service_id } = editUserData;
+      if (!first_name || !last_name || !email || !role || !service_id ) {
+        Swal.fire({
+          icon: 'error',
+          title: 'خطأ',
+          text: 'يرجى ملء جميع الحقول المطلوبة!',
+        });
+        return;
+      }
       await axios.put(`/users/${id}`, { first_name, last_name, email, password, role, confirmPassword, service_id });
       fetchData();
       Swal.fire({
@@ -432,14 +440,14 @@ text: "L'utilisateur a été supprimé avec succès.",
         </div>
       </div>
       {/* Edit User Modal */}
-      <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div className="modal fade" id="editModal" tabIndex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title font-arabic" id="exampleModalLabel">Modifier</h5>
-            
             </div>
             <div className="modal-body">
+            {editUserData && (
               <form>
                 <div className="form-group ">
                   <label htmlFor="first_name" >Prénom</label>
@@ -511,117 +519,29 @@ text: "L'utilisateur a été supprimé avec succès.",
                   />
                 </div>
               </form>
+            )}
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" style={{borderRadius: '0',
-    padding: '3px 16px'}} data-dismiss="modal" id="closeModalBtn">Annuler</button>
+    padding: '3px 16px'}} data-dismiss="modal" id="closeEditModalBtn">Annuler</button>
               <button type="button" className="btn btn-primary" onClick={editUser}>Modifier</button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Edit User Modal 
-      <div className="modal fade" id="editModal" tabIndex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="editModalLabel">تعديل معلومات المستخدم</h5>
-            </div>
-            <div className="modal-body">
-              {editUserData && (
-                <form>
-                  <div className="form-group ">
-                  <label htmlFor="editprénom" >الإسم</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="editprénom"
-                    name="prénom"
-                    value={editUserData.prénom}
-                    onChange={handleEditUserDataChange}
-                    required
-                  />
-                </div>
-                <div className="form-group ">
-                  <label htmlFor="editnom" >النسب</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="editnom"
-                    name="nom"
-                    value={editUserData.nom}
-                    onChange={handleEditUserDataChange}
-                    required
-                  />
-                </div>
-                  <div className="form-group ">
-                  <label htmlFor="editlaboratoire_id" >المختبر</label>
-                  <select
-                    className="form-control"
-                    id="editlaboratoire_id"
-                    name="laboratoire_id"
-                    value={editUserData.laboratoire_id}
-                    onChange={handleEditUserDataChange}
-                    required
-                  >
-                    {ServiceInfos.map(laboratoire => (
-        <option key={laboratoire.id} value={laboratoire.id}>{laboratoire.nom}</option>
-      ))}
-                  </select>
-                </div>
-                <div className="form-group ">
-                  <label htmlFor="editrole" >الدور</label>
-                  <select
-                    className="form-control"
-                    id="editrole"
-                    name="role"
-                    value={editUserData.role}
-                    onChange={handleEditUserDataChange}
-                    required
-                  >
-                    <option value="0">مستخدم</option>
-                    <option value="1">مسؤول الفريق</option>
-                    <option value="2">مسؤول المختبر</option>
-                    <option value="3">مسؤول</option>
-                  </select>
-                </div>
-                  <div className="form-group ">
-                    <label htmlFor="editEmail" >البريد الإلكتروني</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="editEmail"
-                      name="email"
-                      value={editUserData.email}
-                      onChange={handleEditUserDataChange}
-                      required
-                    />
-                  </div>
-                </form>
-              )}
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" style={{borderRadius: '0',
-    padding: '3px 16px'}} data-dismiss="modal" id="closeEditModalBtn">إلغاء</button>
-              <button type="button" className="btn btn-primary" onClick={editUser}>تحديث</button>
-            </div>
-          </div>
-        </div>
-      </div>*/}
-
-      {/* Change Password Modal 
+      {/* Change Password Modal */}
       <div className="modal fade" id="passwordModal" tabIndex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="passwordModalLabel">تغيير كلمة المرور</h5>
+              <h5 className="modal-title" id="passwordModalLabel">Changer le mot de passe</h5>
 
             </div>
             <div className="modal-body">
               <form>
                 <div className="form-group">
-                  <label htmlFor="newPassword" >كلمة المرور الجديدة</label>
+                  <label htmlFor="newPassword" >Nouveau mot de passe</label>
                   <input
                     type="password"
                     className="form-control"
@@ -633,7 +553,7 @@ text: "L'utilisateur a été supprimé avec succès.",
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="confirmNewPassword" >تأكيد كلمة المرور الجديدة</label>
+                  <label htmlFor="confirmNewPassword" >Confirmez le nouveau mot de passe</label>
                   <input
                     type="password"
                     className="form-control"
@@ -648,12 +568,12 @@ text: "L'utilisateur a été supprimé avec succès.",
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" style={{borderRadius: '0',
-    padding: '3px 16px'}} data-dismiss="modal" id="closePasswordModalBtn">إلغاء</button>
-              <button type="button" className="btn btn-primary" onClick={editPassword}>تغيير</button>
+    padding: '3px 16px'}} data-dismiss="modal" id="closePasswordModalBtn">Annuler</button>
+              <button type="button" className="btn btn-primary" onClick={editPassword}>Modifier</button>
             </div>
           </div>
         </div>
-      </div>*/}
+      </div>
     </div>
   );
 }
