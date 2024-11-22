@@ -116,8 +116,8 @@ function Users() {
       if (!first_name || !last_name || !email || !role || !service_id ) {
         Swal.fire({
           icon: 'error',
-          title: 'خطأ',
-          text: 'يرجى ملء جميع الحقول المطلوبة!',
+          title: "Erreur",
+text: "Veuillez remplir tous les champs obligatoires !",
         });
         return;
       }

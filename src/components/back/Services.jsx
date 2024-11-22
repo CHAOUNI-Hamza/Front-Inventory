@@ -4,21 +4,20 @@ import Swal from 'sweetalert2';
 import '../../css/users.css';
 
 
-function Equipes() {
-  const [users, setUsers] = useState([]);
+function Services() {
+  const [services, setServices] = useState([]);
   const [UserInfos, setUserInfo] = useState([]);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [newUserData, setNewUserData] = useState({
+  const [newServiceData, setNewServiceData] = useState({
     name: '',
   });
-  const [editUserData, setEditUserData] = useState(null);
+  const [editServiceData, setEditServiceData] = useState(null);
 
   const fetchData = async () => {
     setError(null);
     try {
       const response = await axios.get('/services');
-      setUsers(response.data.data);
+      setServices(response.data.data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -28,36 +27,35 @@ function Equipes() {
     fetchData();
   }, []);
 
-  const handleNewUserDataChange = (e) => {
+  const handleNewServiceDataChange = (e) => {
     const { name, value } = e.target;
-    setNewUserData({ ...newUserData, [name]: value });
+    setNewServiceData({ ...newServiceData, [name]: value });
   };
 
-  const handleEditUserDataChange = (e) => {
+  const handleEditServiceDataChange = (e) => {
     const { name, value } = e.target;
-    setEditUserData({ ...editUserData, [name]: value });
+    setEditServiceData({ ...editServiceData, [name]: value });
   };
 
-  const addUser = async () => {
-    const { name } = newUserData;
+  const addService = async () => {
+    const { name } = newServiceData;
     if (!name) {
       Swal.fire({
         icon: 'error',
-        title: 'خطأ',
-        text: 'يرجى ملء جميع الحقول المطلوبة!',
+        title: "Erreur",
+text: "Veuillez remplir tous les champs obligatoires !",
       });
       return;
     }
     try {
       await axios.post('/services', { name });
       fetchData();
-      setNewUserData({
-        nom: '',
-        laboratoire_id: '',
+      setNewServiceData({
+        name: '',
       });
       Swal.fire({
-        title: "تم",
-        text: "تمت الإضافة بنجاح.",
+        title: "Fait",
+text: "Ajouté avec succès.",
         icon: "success"
       }).then(() => {
         document.getElementById('closeModalBtn').click();
@@ -66,25 +64,25 @@ function Equipes() {
       if (error.response && error.response.data.errorDate) {
         Swal.fire({
           icon: 'error',
-          title: 'خطأ',
+          title: 'error',
           text: error.response.data.errorDate,
         });
       } else {
         console.error('Error adding user:', error);
-        setError('حدث خطأ أثناء الإضافة .');
+        setError("Une erreur s'est produite lors de l'ajout.");
       }
     }
   };
   
 
-  const editUser = async () => {
+  const editService = async () => {
     try {
-      const { id, name } = editUserData;
+      const { id, name } = editServiceData;
       await axios.put(`/services/${id}`, { name });
       fetchData();
       Swal.fire({
-        title: "تم",
-        text: "تم تحديث المعلومات بنجاح.",
+        title: "Fait",
+text: "Les informations ont été mises à jour avec succès.",
         icon: "success"
       }).then(() => {
         document.getElementById('closeEditModalBtn').click();
@@ -98,40 +96,41 @@ function Equipes() {
             });
           } else {
             console.error('Error updating user:', error);
-            setError('حدث خطأ أثناء تحديث المعلومات .');
+            setError("Une erreur s'est produite lors de la mise à jour des informations.");
           }
     }
   };
 
-  const deleteUser = async (id) => {
+  const deleteService = async (id) => {
     try {
       const result = await Swal.fire({
-        title: "هل أنت متأكد؟",
-        text: "لن تتمكن من التراجع عن هذا!",
+        title: "Êtes-vous sûr ?",
+        text: "Vous ne pourrez pas annuler cela !",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "نعم، احذفها!"
+        confirmButtonText: "Oui, supprimez-le !"
+
       });
 
       if (result.isConfirmed) {
         await axios.delete(`/services/${id}`);
         fetchData();
         Swal.fire({
-          title: "تم الحذف!",
-          text: "تم الحذف بنجاح.",
+          title: "Supprimé !",
+text: "Supprimé avec succès.",
           icon: "success"
         });
       }
     } catch (error) {
       console.error('Error deleting user:', error);
-      setError('حدث خطأ أثناء الحذف .');
+      setError("Une erreur s'est produite lors de la suppression.");
     }
   };
 
   const openEditModal = (user) => {
-    setEditUserData(user);
+    setEditServiceData(user);
   };
 
   return (
@@ -152,19 +151,6 @@ function Equipes() {
           <div className="card-header">
             <h3 className="card-title font-arabic p-2" style={{ borderBottom: 'none',
     paddingBottom: '0' }}>Services</h3>
-            {/*<div className="card-tools" style={{ marginRight: '10rem' }}>
-              <div className="input-group input-group-sm" style={{ width: '214px' }}>
-                <input
-                  type="text"
-                  name="table_search"
-                  className="form-control float-right search-input"
-                  placeholder="البحث"
-                  
-                  value={search}
-                  onChange={handleSearchChange}
-                />
-              </div>
-            </div>*/}
           </div>
           <div className="card-body table-responsive p-0">
             <table className="table table-hover text-nowrap">
@@ -175,15 +161,15 @@ function Equipes() {
                 </tr>
               </thead>
               <tbody>
-                {users.map(user => (
-                  <tr key={user.id} >
-                    <td>{user.name}</td>
+                {services.map(service => (
+                  <tr key={service.id} >
+                    <td>{service.name}</td>
                     <td>
                       <a
                         href="#"
                         style={{ color: '#ff0000b3', marginRight: '10px' }}
                         aria-label="Delete"
-                        onClick={() => deleteUser(user.id)}
+                        onClick={() => deleteService(service.id)}
                       >
                         <i className="fa fa-trash" aria-hidden="true"></i>
                       </a>
@@ -193,7 +179,7 @@ function Equipes() {
                         data-target="#editModal"
                         style={{ color: '#007bff', marginRight: '10px' }}
                         aria-label="Edit"
-                        onClick={() => openEditModal(user)}
+                        onClick={() => openEditModal(service)}
                       >
                         <i className="fa fa-edit" aria-hidden="true"></i>
                       </a>
@@ -209,17 +195,6 @@ function Equipes() {
               </div>
             )}
           </div>
-          {/*<div className="card-footer clearfix">
-            <ul className="pagination pagination-sm m-0 float-right">
-              {Array.from({ length: lastPage }, (_, index) => (
-                <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                  <a className="page-link" href="#" onClick={() => handlePageChange(index + 1)}>
-                    {index + 1}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>*/}
         </div>
       </div>
 
@@ -232,23 +207,23 @@ function Equipes() {
             </div>
             <div className="modal-body">
               <form>
-                <div className="form-group text-right">
-                  <label htmlFor="addnom">Nom</label>
-                  <input type="text" className="form-control" id="addnom" name="nom" value={newUserData.nom} onChange={handleNewUserDataChange} required />
+                <div className="form-group">
+                  <label htmlFor="name">Nom</label>
+                  <input type="text" className="form-control" id="name" name="name" value={newServiceData.name} onChange={handleNewServiceDataChange} required />
                 </div>
               </form>
             </div>
             <div className="modal-footer">
               <button type="button" style={{borderRadius: '0',
     padding: '3px 16px'}} className="btn btn-secondary" id="closeModalBtn" data-dismiss="modal">Annuler</button>
-              <button type="button" className="btn btn-primary" onClick={addUser}>Ajouter</button>
+              <button type="button" className="btn btn-primary" onClick={addService}>Ajouter</button>
             </div>
           </div>
         </div>
       </div>
 
       {/* Edit User Modal */}
-{editUserData && ( 
+{editServiceData && ( 
   <div className="modal fade" id="editModal" tabIndex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div className="modal-dialog" role="document">
       <div className="modal-content">
@@ -257,16 +232,16 @@ function Equipes() {
         </div>
         <div className="modal-body">
           <form>
-          <div className="form-group text-right">
-                  <label htmlFor="nom">Nom</label>
-                  <input type="text" className="form-control" id="nom" name="nom" value={editUserData.nom} onChange={handleEditUserDataChange} required />
+          <div className="form-group">
+                  <label htmlFor="name">Nom</label>
+                  <input type="text" className="form-control" id="name" name="name" value={editServiceData.name} onChange={handleEditServiceDataChange} required />
                 </div>
           </form>
         </div>
         <div className="modal-footer">
           <button type="button" className="btn btn-secondary" style={{borderRadius: '0',
     padding: '3px 16px'}} id="closeEditModalBtn" data-dismiss="modal">Annuler</button>
-          <button type="button" className="btn btn-primary" onClick={editUser}>Modifier</button>
+          <button type="button" className="btn btn-primary" onClick={editService}>Modifier</button>
         </div>
       </div>
     </div>
@@ -277,4 +252,4 @@ function Equipes() {
   );
 }
 
-export default Equipes;
+export default Services;
