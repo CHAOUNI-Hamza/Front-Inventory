@@ -29,6 +29,14 @@ function Materiels() {
   });
   const [editUserData, setEditUserData] = useState(null);
 
+  const getStockLabel = (role) => {
+    switch(role) {
+      case "0": return { label: "Non", color: "red" };
+      case "1": return { label: "Oui", color: "green" };
+      default: return { label: "Unknown", color: "black" };
+    }
+  };
+
   const fetchData = async () => {
     setError(null);
     try {
@@ -316,9 +324,9 @@ Télécharger
                     <td>{user.name}</td>
                     <td>{user.description}</td>
                     <td>{user.quantity}</td>
-                    <td>{user.category_id}</td>
-                    <td>{user.bon_commande_id}</td>
-                    <td>{user.stock}</td>
+                    <td>{user.category_name}</td>
+                    <td>{user.bon_commande_name}</td>
+                    <td style={{ color: getStockLabel(user.stock).color}}>{getStockLabel(user.stock).label}</td>
                     <td>{user.num_inventaire}</td>
                     <td>
                       <a
@@ -407,9 +415,36 @@ Télécharger
                   </select>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="url">Stock</label>
-                  <input type="text" className="form-control" id="stock" name="stock" value={newUserData.stock} onChange={handleNewUserDataChange} required />
-                </div>
+  <label htmlFor="stock">Stock</label>
+  <div>
+    <div className="form-check form-check-inline">
+      <input
+        className="form-check-input"
+        type="radio"
+        id="stockYes"
+        name="stock"
+        value="1"
+        checked={newUserData.stock === "1"}
+        onChange={handleNewUserDataChange}
+        required
+      />
+      <label className="form-check-label" htmlFor="stockYes">Oui</label>
+    </div>
+    <div className="form-check form-check-inline">
+      <input
+        className="form-check-input"
+        type="radio"
+        id="stockNo"
+        name="stock"
+        value="0"
+        checked={newUserData.stock === "0"}
+        onChange={handleNewUserDataChange}
+      />
+      <label className="form-check-label" htmlFor="stockNo">Non</label>
+    </div>
+  </div>
+</div>
+
                 <div className="form-group">
                   <label htmlFor="url">Numéro d'inventaire</label>
                   <input type="text" className="form-control" id="num_inventaire" name="num_inventaire" value={newUserData.num_inventaire} onChange={handleNewUserDataChange} required />
@@ -510,9 +545,35 @@ Télécharger
                   </select>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="url">Stock</label>
-                  <input type="text" className="form-control" id="stock" name="stock" value={editUserData.stock} onChange={handleEditUserDataChange} required />
-                </div>
+        <label htmlFor="stock">Stock</label>
+        <div>
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input"
+              type="radio"
+              id="stockYes"
+              name="stock"
+              value="1"
+              checked={editUserData.stock === "1"}
+              onChange={handleEditUserDataChange}
+              required
+            />
+            <label className="form-check-label" htmlFor="stockYes">Oui</label>
+          </div>
+          <div className="form-check form-check-inline">
+            <input
+              className="form-check-input"
+              type="radio"
+              id="stockNo"
+              name="stock"
+              value="0"
+              checked={editUserData.stock === "0"}
+              onChange={handleEditUserDataChange}
+            />
+            <label className="form-check-label" htmlFor="stockNo">Non</label>
+          </div>
+        </div>
+      </div>
                 <div className="form-group">
                   <label htmlFor="url">Numéro d'inventaire</label>
                   <input type="text" className="form-control" id="num_inventaire" name="num_inventaire" value={editUserData.num_inventaire} onChange={handleEditUserDataChange} required />

@@ -141,11 +141,11 @@ text: "Supprimé avec succès.",
           data-toggle="modal"
           data-target="#exampleModal"
           className="btn btn-success btn-flat mb-3"
-          aria-label="إضافة"
+          aria-label="Ajouter"
           style={{ padding: '3px 11px' }}
         >
           <i className="fa fa-plus" aria-hidden="true" style={{ marginRight: '5px' }}></i>
-          إضافة
+          Ajouter
         </button>
         <div className="card">
           <div className="card-header">

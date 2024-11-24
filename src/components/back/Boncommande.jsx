@@ -1,44 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import '../../css/users.css';
+import { UserContext } from '../../UserContext';
 
-
-function Laboratoires() {
-  const [users, setUsers] = useState([]);
+function Boncommande() {
+  const { userInfo } = useContext(UserContext);
   const [error, setError] = useState(null);
-  const [newUserData, setNewUserData] = useState({
-    nom: '',
+  const [categoriesbdc, setCategoriesbdc] = useState([]);
+  const [commandes, setCommandes] = useState([]);
+  const [newAffectationData, setNewAffectationData] = useState({
+    ref: '',
+    categorie_bdc_id: '',
+    date: '',
   });
-  const [editUserData, setEditUserData] = useState(null);
-
+  const [editAffectationData, setEditAffectationData] = useState(null);
   const fetchData = async () => {
-    setError(null);
     try {
-      const response = await axios.get('/laboratoires');
-      setUsers(response.data.data);
+      const [categoriesbdcResponse, commandesResponse] = await Promise.all([
+        axios.get('/categoriesbdc'),
+        axios.get('/commandes'),
+      ]);
+  
+      setCategoriesbdc(categoriesbdcResponse.data.data);
+      setCommandes(commandesResponse.data.data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
-
+  
+  
   useEffect(() => {
     fetchData();
-  });
+  }, []);
+  
 
-  const handleNewUserDataChange = (e) => {
+  const handleNewAffectationDataChange = (e) => {
     const { name, value } = e.target;
-    setNewUserData({ ...newUserData, [name]: value });
+    setNewAffectationData({ ...newAffectationData, [name]: value });
   };
 
-  const handleEditUserDataChange = (e) => {
+  const handleEditAffectationDataChange = (e) => {
     const { name, value } = e.target;
-    setEditUserData({ ...editUserData, [name]: value });
+    setEditAffectationData({ ...editAffectationData, [name]: value });
   };
 
-  const addUser = async () => {
-    const { nom } = newUserData;
-    if (!nom ) {
+  const addAffectation = async () => {
+    const { ref, categorie_bdc_id, date } = newAffectationData;
+    if (!ref || !categorie_bdc_id || !date ) {
       Swal.fire({
         icon: 'error',
         title: 'خطأ',
@@ -47,88 +56,82 @@ function Laboratoires() {
       return;
     }
     try {
-      await axios.post('/laboratoires', { nom });
-      fetchData();
-      setNewUserData({
-        nom: '',
-      });
+      await axios.post('/commandes', { ref, categorie_bdc_id, date });
       Swal.fire({
-        title: "تم",
-        text: "تمت الإضافة  بنجاح.",
+        title: "Succès",
+        text: "Un nouvel utilisateur a été ajouté avec succès.",
         icon: "success"
       }).then(() => {
         document.getElementById('closeModalBtn').click();
       });
+      fetchData();
+      setNewAffectationData({
+        ref: '',
+        categorie_bdc_id: '',
+        date: '',
+      });
     } catch (error) {
-      if (error.response && error.response.data.errorDate) {
-        Swal.fire({
-          icon: 'error',
-          title: 'خطأ',
-          text: error.response.data.errorDate,
-        });
-      } else {
-        console.error('Error adding user:', error);
-        setError('حدث خطأ أثناء الإضافة .');
-      }
+      console.error('Error adding user:', error);
+      setError('Une erreur est survenue lors de l\'ajout de l\'utilisateur.');
     }
   };
-  
 
-  const editUser = async () => {
+  const editAffectation = async () => {
     try {
-      const { id, nom } = editUserData;
-      await axios.put(`/laboratoires/${id}`, { nom });
+      const { id, ref, categorie_bdc_id, date } = editAffectationData;
+      if (!ref || !categorie_bdc_id || !date) {
+        Swal.fire({
+          icon: 'error',
+          title: "Erreur",
+text: "Veuillez remplir tous les champs obligatoires !",
+        });
+        return;
+      }
+      await axios.put(`/commandes/${id}`, {  ref, categorie_bdc_id, date });
       fetchData();
       Swal.fire({
-        title: "تم",
-        text: "تم تحديث المعلومات بنجاح.",
+        title: "Succès",
+text: "Les informations de l'utilisateur ont été mises à jour avec succès.",
         icon: "success"
       }).then(() => {
         document.getElementById('closeEditModalBtn').click();
       });
     } catch (error) {
-        if (error.response && error.response.data.errorDate) {
-            Swal.fire({
-              icon: 'error',
-              title: 'خطأ',
-              text: error.response.data.errorDate,
-            });
-          } else {
-            console.error('Error updating user:', error);
-            setError('حدث خطأ أثناء تحديث المعلومات .');
-          }
+      console.error('Error updating user:', error);
+      setError('Une erreur est survenue lors de la mise à jour des informations de l\'utilisateur.');
     }
   };
 
-  const deleteUser = async (id) => {
+  const deleteAffectation = async (id) => {
     try {
       const result = await Swal.fire({
-        title: "هل أنت متأكد؟",
-        text: "لن تتمكن من التراجع عن هذا!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "نعم، احذفها!"
+        title: "Êtes-vous sûr ?",
+text: "Vous ne pourrez pas revenir en arrière !",
+icon: "warning",
+showCancelButton: true,
+confirmButtonColor: "#3085d6",
+cancelButtonColor: "#d33",
+confirmButtonText: "Oui, supprimez-le !"
+
       });
 
       if (result.isConfirmed) {
-        await axios.delete(`/laboratoires/${id}`);
+        await axios.delete(`/commandes/${id}`);
         fetchData();
         Swal.fire({
-          title: "تم الحذف!",
-          text: "تم الحذف بنجاح.",
+          title: "Supprimé !",
+text: "L'utilisateur a été supprimé avec succès.",
           icon: "success"
         });
       }
     } catch (error) {
       console.error('Error deleting user:', error);
-      setError('حدث خطأ أثناء الحذف .');
+      setError('Une erreur est survenue lors de la suppression de l\'utilisateur.');
     }
   };
 
   const openEditModal = (user) => {
-    setEditUserData(user);
+    setEditAffectationData(user);
   };
 
   return (
@@ -147,8 +150,7 @@ function Laboratoires() {
         </button>
         <div className="card">
           <div className="card-header">
-            <h3 className="card-title font-arabic p-2" style={{ float: 'right', borderBottom: 'none',
-    paddingBottom: '0' }}>لائحة المختبرات</h3>
+            <h3 className="card-title p-2">Liste users</h3>
             {/*<div className="card-tools" style={{ marginRight: '10rem' }}>
               <div className="input-group input-group-sm" style={{ width: '214px' }}>
                 <input
@@ -163,23 +165,34 @@ function Laboratoires() {
               </div>
             </div>*/}
           </div>
+
+
+
+
+
+
           <div className="card-body table-responsive p-0">
             <table className="table table-hover text-nowrap">
               <thead>
-                <tr style={{ textAlign: 'right' }}>
-                  <th>إجراءات</th>
-                  <th>الإسم</th>
+                <tr>
+                  <th>Ref</th>
+                  <th>Categorie BDC</th>
+                  <th>Date</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
-                {users.map(user => (
-                  <tr key={user.id} style={{ textAlign: 'right' }}>
-                    <td>
+                {commandes.map(commande => (
+                  <tr key={commande.id}>
+                    <td >{commande.ref}</td>
+                    <td >{commande.categorie_bdc_id}</td>
+                    <td >{commande.date}</td>
+                    <td >
                       <a
                         href="#"
                         style={{ color: '#ff0000b3', marginRight: '10px' }}
                         aria-label="Delete"
-                        onClick={() => deleteUser(user.id)}
+                        onClick={() => deleteAffectation(commande.id)}
                       >
                         <i className="fa fa-trash" aria-hidden="true"></i>
                       </a>
@@ -189,12 +202,15 @@ function Laboratoires() {
                         data-target="#editModal"
                         style={{ color: '#007bff', marginRight: '10px' }}
                         aria-label="Edit"
-                        onClick={() => openEditModal(user)}
+                        onClick={() => openEditModal(commande)}
                       >
                         <i className="fa fa-edit" aria-hidden="true"></i>
                       </a>
                     </td>
-                    <td>{user.nom}</td>
+                    
+                    
+                    
+                    
                   </tr>
                 ))}
               </tbody>
@@ -219,59 +235,133 @@ function Laboratoires() {
         </div>
       </div>
 
-      {/* Add User Modal */}
+      {/* Add Affectation Modal */}
       <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
-            <div className="modal-header" dir='rtl'>
-              <h5 className="modal-title font-arabic" id="exampleModalLabel">إضافة مختبر</h5>
+            <div className="modal-header">
+              <h5 className="modal-title font-arabic" id="exampleModalLabel">Ajouter</h5>
+            
             </div>
-            <div className="modal-body" dir='rtl'>
+            <div className="modal-body">
               <form>
-                <div className="form-group text-right">
-                  <label htmlFor="addnom">الإسم</label>
-                  <input type="text" className="form-control" id="addnom" name="nom" value={newUserData.nom} onChange={handleNewUserDataChange} required />
+              <div className="form-group ">
+                  <label htmlFor="ref" >Ref</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="ref"
+                    name="ref"
+                    value={newAffectationData.ref}
+                    onChange={handleNewAffectationDataChange}
+                    required
+                  />
+                </div>
+                <div className="form-group ">
+                  <label htmlFor="categorie_bdc_id" >Categorie BDC</label>
+                  <select
+                    className="form-control text-left"
+                    id="categorie_bdc_id"
+                    name="categorie_bdc_id"
+                    value={newAffectationData.categorie_bdc_id}
+                    onChange={handleNewAffectationDataChange}
+                    required
+                  >
+                    <option value="" disabled>Sélectionner Categorie de BDC</option>
+                    {categoriesbdc.map(categoriebdc => (
+        <option key={categoriebdc.id} value={categoriebdc.id}>{categoriebdc.name}</option>
+      ))}
+                    
+                  </select>
+                </div>
+                
+                <div className="form-group ">
+                  <label htmlFor="date" >Date</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="date"
+                    name="date"
+                    value={newAffectationData.date}
+                    onChange={handleNewAffectationDataChange}
+                    required
+                  />
                 </div>
               </form>
             </div>
             <div className="modal-footer">
-              <button type="button" style={{borderRadius: '0',
-    padding: '3px 16px'}} className="btn btn-secondary" id="closeModalBtn" data-dismiss="modal">إلغاء</button>
-              <button type="button" className="btn btn-primary" onClick={addUser}>إضافة</button>
+              <button type="button" className="btn btn-secondary" style={{borderRadius: '0',
+    padding: '3px 16px'}} data-dismiss="modal" id="closeModalBtn">Annuler</button>
+              <button type="button" className="btn btn-primary" onClick={addAffectation}>Ajouter</button>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Edit User Modal */}
-      {/* Edit User Modal */}
-{editUserData && ( 
-  <div className="modal fade" id="editModal" tabIndex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div className="modal-dialog" role="document">
-      <div className="modal-content">
-        <div className="modal-header" dir='rtl'>
-          <h5 className="modal-title font-arabic" id="editModalLabel">  الفريق تعديل</h5>
-        </div>
-        <div className="modal-body" dir='rtl'>
-          <form>
-          <div className="form-group text-right">
-                  <label htmlFor="nom">الإسم</label>
-                  <input type="text" className="form-control" id="nom" name="nom" value={editUserData.nom} onChange={handleEditUserDataChange} required />
+      {/* Edit Affectation Modal */}
+      <div className="modal fade" id="editModal" tabIndex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title font-arabic" id="exampleModalLabel">Modifier</h5>
+            </div>
+            <div className="modal-body">
+            {editAffectationData && (
+              <form>
+                <div className="form-group ">
+                  <label htmlFor="ref" >Ref</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="ref"
+                    name="ref"
+                    value={editAffectationData.ref}
+                    onChange={handleEditAffectationDataChange}
+                    required
+                  />
                 </div>
-          </form>
-        </div>
-        <div className="modal-footer">
-          <button type="button" className="btn btn-secondary" style={{borderRadius: '0',
-    padding: '3px 16px'}} id="closeEditModalBtn" data-dismiss="modal">إلغاء</button>
-          <button type="button" className="btn btn-primary" onClick={editUser}>تعديل</button>
+                <div className="form-group ">
+                  <label htmlFor="categorie_bdc_id" >Categorie BDC</label>
+                  <select
+                    className="form-control text-left"
+                    id="categorie_bdc_id"
+                    name="categorie_bdc_id"
+                    value={editAffectationData.categorie_bdc_id}
+                    onChange={handleEditAffectationDataChange}
+                    required
+                  >
+                    <option value="" disabled>Sélectionner Categorie de BDC</option>
+                    {categoriesbdc.map(categoriebdc => (
+        <option key={categoriebdc.id} value={categoriebdc.id}>{categoriebdc.name}</option>
+      ))}
+                    
+                  </select>
+                </div>
+                
+                <div className="form-group ">
+                  <label htmlFor="date" >Date</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="date"
+                    name="date"
+                    value={editAffectationData.date}
+                    onChange={handleEditAffectationDataChange}
+                    required
+                  />
+                </div>
+              </form>
+            )}
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" style={{borderRadius: '0',
+    padding: '3px 16px'}} data-dismiss="modal" id="closeEditModalBtn">Annuler</button>
+              <button type="button" className="btn btn-primary" onClick={editAffectation}>Modifier</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-)}
-
     </div>
   );
 }
 
-export default Laboratoires;
+export default Boncommande;

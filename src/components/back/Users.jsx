@@ -72,16 +72,18 @@ function Users() {
     if (!first_name || !last_name || !email || !password || !role || !confirmPassword || !service_id ) {
       Swal.fire({
         icon: 'error',
-        title: 'خطأ',
-        text: 'يرجى ملء جميع الحقول المطلوبة!',
+        title: 'Erreur',
+text: 'Veuillez remplir tous les champs requis !',
+
       });
       return;
     }
     if (password !== confirmPassword) {
       Swal.fire({
         icon: 'error',
-        title: 'خطأ',
-        text: 'كلمة المرور وتأكيد كلمة المرور غير متطابقين!',
+        title: 'Erreur',
+text: 'Le mot de passe et la confirmation du mot de passe ne correspondent pas !',
+
       });
       return;
     }
@@ -222,7 +224,7 @@ text: "L'utilisateur a été supprimé avec succès.",
           style={{ padding: '3px 11px' }}
         >
           <i className="fa fa-plus" aria-hidden="true" style={{ marginRight: '5px' }}></i>
-          إضافة
+          Ajouter
         </button>
         <div className="card">
           <div className="card-header">
@@ -267,7 +269,7 @@ text: "L'utilisateur a été supprimé avec succès.",
                     <td style={{ color: getRoleLabel(user.role).color}}>
                     {getRoleLabel(user.role).label}
                     </td>
-                    <td >{user.service_id}</td>
+                    <td >{user.service_name}</td>
                     <td >
                       <a
                         href="#"
