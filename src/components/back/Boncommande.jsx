@@ -185,7 +185,7 @@ text: "L'utilisateur a été supprimé avec succès.",
                 {commandes.map(commande => (
                   <tr key={commande.id}>
                     <td >{commande.ref}</td>
-                    <td >{commande.categorie_bdc_id}</td>
+                    <td >{commande.categorie_bdc_name}</td>
                     <td >{commande.date}</td>
                     <td >
                       <a

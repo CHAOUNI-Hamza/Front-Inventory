@@ -7,6 +7,10 @@ import { UserContext } from '../../UserContext';
 function Affmateriels() {
   const { userInfo } = useContext(UserContext);
   const [users, setUsers] = useState([]);
+  const [selectedMateriel, setselectedMateriel] = useState('');
+  const [selectedService, setselectedService] = useState('');
+  const [selectedAssigned, setselectedAssigned] = useState('');
+  const [selectedDate, setselectedDate] = useState('');
   const [affectations, setAffectations] = useState([]);
   const [error, setError] = useState(null);
   const [materials, setMaterials] = useState([]);
@@ -19,19 +23,16 @@ function Affmateriels() {
     date: '',
   });
   const [editAffectationData, setEditAffectationData] = useState(null);
-
-  const getRoleLabel = (role) => {
-    switch(role) {
-      case '0': return { label: "employé", color: "green" };
-      case '1': return { label: "Chef de service", color: "orange" };
-      case '2': return { label: "Admin", color: "blue" };
-      default: return { label: "Unknown", color: "black" };
-    }
-  };
   const fetchData = async () => {
     try {
       const [affectationResponse, serviceResponse, materialResponse, userResponse] = await Promise.all([
-        axios.get('/affectations'),
+        axios.get('/affectations', {
+          params: { 
+            materiel_id: selectedMateriel, 
+            service_id: selectedService,
+            assigned_by: selectedAssigned, 
+            date: selectedDate,  
+          }}),
         axios.get('/services'),
         axios.get('/materiels'),
         axios.get('/users'),
@@ -45,30 +46,24 @@ function Affmateriels() {
       console.error('Error fetching data:', error);
     }
   };
-  
-  
   useEffect(() => {
     fetchData();
   }, []);
-  
-
   const handleNewAffectationDataChange = (e) => {
     const { name, value } = e.target;
     setNewAffectationData({ ...newAffectationData, [name]: value });
   };
-
   const handleEditAffectationDataChange = (e) => {
     const { name, value } = e.target;
     setEditAffectationData({ ...editAffectationData, [name]: value });
   };
-
   const addAffectation = async () => {
     const { materiel_id, service_id, assigned_by, quantity, date } = newAffectationData;
     if (!materiel_id || !service_id || !assigned_by || !quantity || !date ) {
       Swal.fire({
         icon: 'error',
-        title: 'خطأ',
-        text: 'يرجى ملء جميع الحقول المطلوبة!',
+        title: 'Erreur',
+        text: 'Veuillez remplir tous les champs obligatoires !',
       });
       return;
     }
@@ -93,6 +88,14 @@ function Affmateriels() {
       console.error('Error adding user:', error);
       setError('Une erreur est survenue lors de l\'ajout de l\'utilisateur.');
     }
+  };
+
+  const clearFilters = () => {
+    setselectedMateriel('');
+    setselectedService('');
+    setselectedAssigned('');
+    setselectedDate('');
+    fetchData();
   };
 
   const editAffectation = async () => {
@@ -165,31 +168,79 @@ text: "L'utilisateur a été supprimé avec succès.",
           style={{ padding: '3px 11px' }}
         >
           <i className="fa fa-plus" aria-hidden="true" style={{ marginRight: '5px' }}></i>
-          إضافة
+          Ajouter
         </button>
         <div className="card">
           <div className="card-header">
-            <h3 className="card-title p-2">Liste users</h3>
-            {/*<div className="card-tools" style={{ marginRight: '10rem' }}>
-              <div className="input-group input-group-sm" style={{ width: '214px' }}>
-                <input
-                  type="text"
-                  name="table_search"
-                  className="form-control float-right search-input"
-                  placeholder="البحث"
-                  style={{ textAlign: 'right' }}
-                  value={search}
-                  onChange={handleSearchChange}
-                />
-              </div>
-            </div>*/}
+            <h3 className="card-title p-2 mr-5">Liste des affectations</h3>
+            <div className="card-tools" style={{ marginRight: '10rem' }}>
           </div>
+          <div className="filter-group mt-2">
+            <select
+                className="form-select"
+                style={{ width: '20%' }}
+                value={selectedMateriel}
+                onChange={(e) => setselectedMateriel(e.target.value)}
+              >
+                <option value="">Materiels</option>
+                {materials.map(material => (
+                  <option key={material.id} value={material.id}>{material.name}</option>
+                ))}
+              </select>
+              <select
+                className="form-select"
+                style={{ width: '20%' }}
+                value={selectedService}
+                onChange={(e) => setselectedService(e.target.value)}
+              >
+                <option value="">Services</option>
+                {serviceInfos.map(service => (
+                  <option key={service.id} value={service.id}>{service.name}</option>
+                ))}
+              </select>
+              <select
+                className="form-select"
+                style={{ width: '20%' }}
+                value={selectedAssigned}
+                onChange={(e) => setselectedAssigned(e.target.value)}
+              >
+                <option value="">Users</option>
+                {users.map(user => (
+                  <option key={user.id} value={user.id}>{user.first_name} {user.last_name}</option>
+                ))}
+              </select>
+              <input
+  type="date"
+  className="form-select"
+  style={{ width: '15%' }}
+  value={selectedDate}
+  onChange={(e) => setselectedDate(e.target.value)} // Valeur déjà au format YYYY-MM-DD
+/>
+            <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={clearFilters}
+              >
+                Vider
+              </button>
+
+
+              {/*<button
+  type="button"
+  className="btn btn-success"
+  onClick={downloadExcel}
+  aria-label="تحميل"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" style={{ marginRight: '5px' }} height="16" fill="currentColor" className="bi bi-file-earmark-spreadsheet" viewBox="0 0 16 16">
+  <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V9H3V2a1 1 0 0 1 1-1h5.5zM3 12v-2h2v2zm0 1h2v2H4a1 1 0 0 1-1-1zm3 2v-2h3v2zm4 0v-2h3v1a1 1 0 0 1-1 1zm3-3h-3v-2h3zm-7 0v-2h3v2z"/>
+</svg>
+  تحميل
+</button>*/}
 
 
 
-
-
-
+          </div>
+          </div>
           <div className="card-body table-responsive p-0">
             <table className="table table-hover text-nowrap">
               <thead>
@@ -205,9 +256,9 @@ text: "L'utilisateur a été supprimé avec succès.",
               <tbody>
                 {affectations.map(affectation => (
                   <tr key={affectation.id}>
-                    <td >{affectation.materiel_id}</td>
-                    <td >{affectation.service_id}</td>
-                    <td >{affectation.assigned_by}</td>
+                    <td >{affectation.materiel_name}</td>
+                    <td >{affectation.service_name}</td>
+                    <td >{affectation.assigned_name}</td>
                     <td >{affectation.quantity}</td>
                     <td >{affectation.date}</td>
                     <td >
@@ -230,10 +281,6 @@ text: "L'utilisateur a été supprimé avec succès.",
                         <i className="fa fa-edit" aria-hidden="true"></i>
                       </a>
                     </td>
-                    
-                    
-                    
-                    
                   </tr>
                 ))}
               </tbody>
@@ -257,7 +304,6 @@ text: "L'utilisateur a été supprimé avec succès.",
           </div>*/}
         </div>
       </div>
-
       {/* Add Affectation Modal */}
       <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog" role="document">
@@ -280,9 +326,8 @@ text: "L'utilisateur a été supprimé avec succès.",
                   >
                     <option value="" disabled>Sélectionner le service</option>
                     {serviceInfos.map(service => (
-        <option key={service.id} value={service.id}>{service.name}</option>
-      ))}
-                    
+                    <option key={service.id} value={service.id}>{service.name}</option>
+                  ))}
                   </select>
                 </div>
                 <div className="form-group ">
