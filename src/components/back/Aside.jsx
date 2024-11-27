@@ -18,7 +18,7 @@ function Aside({ setActiveComponent, activeComponent }) {
           <div className="info">
           {userInfo ? (
               <a type='button' className="d-block text-white">
-                {userInfo.nom} {userInfo.prénom}
+                {userInfo.last_name} {userInfo.first_name}
               </a>
             ) : (
               <a type='button' className="d-block text-white">

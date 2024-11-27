@@ -33,6 +33,7 @@ function Users() {
       default: return { label: "Unknown", color: "black" };
     }
   };
+
   const fetchData = async () => {
     try {
       const [userResponse, serviceResponse] = await Promise.all([
