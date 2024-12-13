@@ -14,11 +14,7 @@ const PublicRoute = () => {
     case 0:
       return <Navigate to="/admin" />;
     case 1:
-      return <Navigate to="/chef-equipe" />;
-    case 2:
-      return <Navigate to="/chef-labo" />;
-    case 3:
-      return <Navigate to="/test" />;
+      return <Navigate to="/employe" />;
     default:
       return <Navigate to="/login" />;
   }

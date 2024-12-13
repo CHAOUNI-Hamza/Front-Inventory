@@ -279,13 +279,13 @@ const downloadExcel = () => {
                   <option key={equipe.id} value={equipe.id}>{equipe.nom}</option>
                 ))}
               </select>*/}
-            <button
+            {/*<button
                 type="button"
                 className="btn btn-secondary btn-sm"
                 onClick={clearFilters}
               >
                 افرغ
-              </button>
+              </button>*/}
 
 
               <button
@@ -308,7 +308,7 @@ Télécharger
             <table className="table table-hover text-nowrap">
               <thead>
                 <tr>
-                  <th>Nom</th>
+                  <th>Designation</th>
                   <th>Description </th>
                   <th>Quantité</th>
                   <th>Catégorie</th>
@@ -371,7 +371,7 @@ Télécharger
             <div className="modal-body">
               <form>
                 <div className="form-group">
-                  <label htmlFor="name">Nom</label>
+                  <label htmlFor="name">Designation</label>
                   <input type="text" className="form-control" id="name" name="name" value={newUserData.name} onChange={handleNewUserDataChange} required />
                 </div>
                 <div className="form-group">
@@ -501,7 +501,7 @@ Télécharger
         <div className="modal-body">
           <form>
           <div className="form-group">
-                  <label htmlFor="name">Nom</label>
+                  <label htmlFor="name">Designation</label>
                   <input type="text" className="form-control" id="name" name="name" value={editUserData.name} onChange={handleEditUserDataChange} required />
                 </div>
                 <div className="form-group">

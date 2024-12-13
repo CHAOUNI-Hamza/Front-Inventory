@@ -27,9 +27,8 @@ function Users() {
 
   const getRoleLabel = (role) => {
     switch(role) {
-      case '0': return { label: "employé", color: "green" };
-      case '1': return { label: "Chef de service", color: "orange" };
-      case '2': return { label: "Admin", color: "blue" };
+      case '0': return { label: "Admin", color: "green" };
+      case '1': return { label: "employé", color: "orange" };
       default: return { label: "Unknown", color: "black" };
     }
   };
@@ -391,9 +390,8 @@ text: "L'utilisateur a été supprimé avec succès.",
                     required
                   >
                     <option value="" disabled>Sélectionner le Role</option>
-                    <option value="0">Employé</option>
-                    <option value="1">Chef de service</option>
-                    <option value="2">Admin</option>
+                    <option value="0">Admin</option>
+                    <option value="1">Employé</option>
                   </select>
                 </div>
                 <div className="form-group ">
@@ -504,9 +502,8 @@ text: "L'utilisateur a été supprimé avec succès.",
                     required
                   >
                     <option value="" disabled>Sélectionner le Role</option>
-                    <option value="0">Employé</option>
-                    <option value="1">Chef de service</option>
-                    <option value="2">Admin</option>
+                    <option value="0">Admin</option>
+                    <option value="1">Employé</option>
                   </select>
                 </div>
                 <div className="form-group ">

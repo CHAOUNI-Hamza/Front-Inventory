@@ -359,7 +359,7 @@ text: "L'utilisateur a été supprimé avec succès.",
                   >
                     <option value="" disabled>Sélectionner users</option>
                     {users.map(user => (
-        <option key={user.id} value={user.id}>{user.first_name} {user.first_name}</option>
+        <option key={user.id} value={user.id}>{user.first_name} {user.last_name}</option>
       ))}
                     
                   </select>
@@ -454,7 +454,7 @@ text: "L'utilisateur a été supprimé avec succès.",
                   >
                     <option value="" disabled>Sélectionner users</option>
                     {users.map(user => (
-        <option key={user.id} value={user.id}>{user.first_name} {user.first_name}</option>
+        <option key={user.id} value={user.id}>{user.first_name} {user.last_name}</option>
       ))}
                     
                   </select>
