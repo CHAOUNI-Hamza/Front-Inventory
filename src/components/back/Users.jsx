@@ -114,7 +114,7 @@ text: 'Le mot de passe et la confirmation du mot de passe ne correspondent pas !
 
   const editUser = async () => {
     try {
-      const { id, first_name, last_name, email, password, role, confirmPassword, service_id } = editUserData;
+      const { id, first_name, last_name, email, role, service_id } = editUserData;
       if (!first_name || !last_name || !email || !role || !service_id ) {
         Swal.fire({
           icon: 'error',
@@ -123,7 +123,7 @@ text: "Veuillez remplir tous les champs obligatoires !",
         });
         return;
       }
-      await axios.put(`/users/${id}`, { first_name, last_name, email, password, role, confirmPassword, service_id });
+      await axios.put(`/users/${id}`, { first_name, last_name, email, role, service_id });
       fetchData();
       Swal.fire({
         title: "Succès",

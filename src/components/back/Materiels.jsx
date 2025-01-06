@@ -24,16 +24,14 @@ function Materiels() {
     quantity: '',
     category_id: '',
     bon_commande_id: '',
-    stock: '',
     num_inventaire: '',
   });
   const [editUserData, setEditUserData] = useState(null);
 
   const getStockLabel = (role) => {
     switch(role) {
-      case "0": return { label: "Non", color: "red" };
-      case "1": return { label: "Oui", color: "green" };
-      default: return { label: "Unknown", color: "black" };
+      case 0 : return { label: "Non", color: "red" };
+      default: return { label: "Oui", color: "green" };
     }
   };
 
@@ -104,8 +102,8 @@ function Materiels() {
   };
 
   const addUser = async () => {
-    const { name, description, quantity, category_id, bon_commande_id, stock, num_inventaire } = newUserData;
-    if (!name || !description || !quantity || !category_id || !bon_commande_id || !stock || !num_inventaire ) {
+    const { name, description, quantity, category_id, bon_commande_id, num_inventaire } = newUserData;
+    if (!name || !description || !quantity || !category_id || !bon_commande_id || !num_inventaire ) {
       Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -114,7 +112,7 @@ text: 'Veuillez remplir tous les champs obligatoires!',
       return;
     }
     try {
-      await axios.post('materiels', { name, description, quantity, category_id, bon_commande_id, stock, num_inventaire });
+      await axios.post('materiels', { name, description, quantity, category_id, bon_commande_id, num_inventaire });
       Swal.fire({
         title: 'Terminé',
 text: 'Ajouté avec succès.',
@@ -129,7 +127,6 @@ text: 'Ajouté avec succès.',
         quantity: '',
         category_id: '',
         bon_commande_id: '',
-        stock: '',
         num_inventaire: '',
       });
     } catch (error) {
@@ -139,8 +136,8 @@ text: 'Ajouté avec succès.',
 
   const editUser = async () => {
     try {
-      const { id, name, description, quantity, category_id, bon_commande_id, stock, num_inventaire } = editUserData;
-      await axios.put(`materiels/${id}`, { name, description, quantity, category_id, bon_commande_id, stock, num_inventaire });
+      const { id, name, description, quantity, category_id, bon_commande_id, num_inventaire } = editUserData;
+      await axios.put(`materiels/${id}`, { name, description, quantity, category_id, bon_commande_id, num_inventaire });
       fetchData();
       Swal.fire({
         title: 'Terminé',
@@ -210,9 +207,8 @@ confirmButtonText: 'Oui, supprimez-la !'
     'nom': user.name,
     'description': user.description,
     'quantité': user.quantity,
-    'catégorie': user.category_id,
-    'bon de commande': user.bon_commande_id,
-    'stock': user.stock,
+    'catégorie': user.category_name,
+    'bon de commande': user.bon_commande_name,
     "numéro d'inventaire": user.num_inventaire,
   })));
 
@@ -326,7 +322,7 @@ Télécharger
                     <td>{user.quantity}</td>
                     <td>{user.category_name}</td>
                     <td>{user.bon_commande_name}</td>
-                    <td style={{ color: getStockLabel(user.stock).color}}>{getStockLabel(user.stock).label}</td>
+                    <td style={{ color: getStockLabel(user.quantity).color}}>{getStockLabel(user.quantity).label}</td>
                     <td>{user.num_inventaire}</td>
                     <td>
                       <a
@@ -414,36 +410,6 @@ Télécharger
                     ))}
                   </select>
                 </div>
-                <div className="form-group">
-  <label htmlFor="stock">Stock</label>
-  <div>
-    <div className="form-check form-check-inline">
-      <input
-        className="form-check-input"
-        type="radio"
-        id="stockYes"
-        name="stock"
-        value="1"
-        checked={newUserData.stock === "1"}
-        onChange={handleNewUserDataChange}
-        required
-      />
-      <label className="form-check-label" htmlFor="stockYes">Oui</label>
-    </div>
-    <div className="form-check form-check-inline">
-      <input
-        className="form-check-input"
-        type="radio"
-        id="stockNo"
-        name="stock"
-        value="0"
-        checked={newUserData.stock === "0"}
-        onChange={handleNewUserDataChange}
-      />
-      <label className="form-check-label" htmlFor="stockNo">Non</label>
-    </div>
-  </div>
-</div>
 
                 <div className="form-group">
                   <label htmlFor="url">Numéro d'inventaire</label>
@@ -544,36 +510,6 @@ Télécharger
                     ))}
                   </select>
                 </div>
-                <div className="form-group">
-        <label htmlFor="stock">Stock</label>
-        <div>
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              id="stockYes"
-              name="stock"
-              value="1"
-              checked={editUserData.stock === "1"}
-              onChange={handleEditUserDataChange}
-              required
-            />
-            <label className="form-check-label" htmlFor="stockYes">Oui</label>
-          </div>
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              id="stockNo"
-              name="stock"
-              value="0"
-              checked={editUserData.stock === "0"}
-              onChange={handleEditUserDataChange}
-            />
-            <label className="form-check-label" htmlFor="stockNo">Non</label>
-          </div>
-        </div>
-      </div>
                 <div className="form-group">
                   <label htmlFor="url">Numéro d'inventaire</label>
                   <input type="text" className="form-control" id="num_inventaire" name="num_inventaire" value={editUserData.num_inventaire} onChange={handleEditUserDataChange} required />

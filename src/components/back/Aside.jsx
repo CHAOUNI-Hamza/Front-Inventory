@@ -18,8 +18,8 @@ function Aside({ setActiveComponent, activeComponent }) {
           <div className="info">
           {userInfo ? (
               <a type='button' className="d-block text-white">
-                {userInfo.last_name} {userInfo.first_name}
-              </a>
+              {userInfo.first_name.charAt(0).toUpperCase() + userInfo.first_name.slice(1).toLowerCase()} {userInfo.last_name.toUpperCase()} 
+            </a>            
             ) : (
               <a type='button' className="d-block text-white">
                 Loading...

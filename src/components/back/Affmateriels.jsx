@@ -46,9 +46,6 @@ function Affmateriels() {
       console.error('Error fetching data:', error);
     }
   };
-  useEffect(() => {
-    fetchData();
-  }, []);
   const handleNewAffectationDataChange = (e) => {
     const { name, value } = e.target;
     setNewAffectationData({ ...newAffectationData, [name]: value });
@@ -85,8 +82,12 @@ function Affmateriels() {
         date: '',
       });
     } catch (error) {
-      console.error('Error adding user:', error);
-      setError('Une erreur est survenue lors de l\'ajout de l\'utilisateur.');
+      Swal.fire({
+        icon: "error",
+        text: error.response.data.message,
+      });
+      //console.error('Error adding user:', error.response.data.message);
+      //setError('Une erreur est survenue lors de l\'ajout de l\'utilisateur.');
     }
   };
 
@@ -119,8 +120,12 @@ text: "Les informations de l'utilisateur ont été mises à jour avec succès.",
         document.getElementById('closeEditModalBtn').click();
       });
     } catch (error) {
-      console.error('Error updating user:', error);
-      setError('Une erreur est survenue lors de la mise à jour des informations de l\'utilisateur.');
+      Swal.fire({
+        icon: "error",
+        text: error.response.data.message,
+      });
+      //console.error('Error updating user:', error);
+      //setError('Une erreur est survenue lors de la mise à jour des informations de l\'utilisateur.');
     }
   };
 
@@ -148,13 +153,17 @@ text: "L'utilisateur a été supprimé avec succès.",
       }
     } catch (error) {
       console.error('Error deleting user:', error);
-      setError('Une erreur est survenue lors de la suppression de l\'utilisateur.');
+      //setError('Une erreur est survenue lors de la suppression de l\'utilisateur.');
     }
   };
 
   const openEditModal = (user) => {
     setEditAffectationData(user);
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [selectedMateriel, selectedService, selectedAssigned, selectedDate]);
 
   return (
     <div className="row font-arabic">
